@@ -1,0 +1,11 @@
+using:
+  spring:
+    schdulefFactory : true
+
+spring:
+    datasource:
+      jdbc-url : jdbc:mysql://localhost:3306/mms?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+      driver-class-name: com.mysql.jdbc.Driver
+      username : emoldino
+      password : emoldino
+
