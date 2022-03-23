@@ -10,8 +10,10 @@ import java.io.Serializable;
 public class TimerInfo implements Serializable {
     private int totalFireCount;
     private boolean runForever;
-    private boolean isClustered;
+    private boolean clustered;
     private long repeatIntervalMs;
     private long initialOffsetMs;
     private String callbackData;
+    private boolean cronSchedule;
+
 }

@@ -21,7 +21,19 @@ public class SomeModuleService {
                 .repeatIntervalMs(5000)
                 .initialOffsetMs(1000)
                 .callbackData("괜찮냐")
-                .isClustered(false)
+                .clustered(false)
+                .build();
+
+        service.schedule(HelloJob.class,info);
+    }
+
+    public void runHelloJobOnCluster() {
+        final TimerInfo info = TimerInfo.builder()
+                .totalFireCount(5)
+                .repeatIntervalMs(5000)
+                .initialOffsetMs(1000)
+                .callbackData("괜찮냐")
+                .clustered(true)
                 .build();
 
         service.schedule(HelloJob.class,info);

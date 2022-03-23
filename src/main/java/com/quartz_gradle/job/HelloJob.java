@@ -11,11 +11,10 @@ import org.quartz.JobExecutionException;
  * created on 2018-08-12
  */
 @Slf4j
-@DisallowConcurrentExecution
 public class  HelloJob implements Job {
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
+    public void execute(JobExecutionContext context){
         log.info("HERE !!!!!!! I'M PROCESSING ");
         log.info("####################################### Hello Job is being executed!");
     }

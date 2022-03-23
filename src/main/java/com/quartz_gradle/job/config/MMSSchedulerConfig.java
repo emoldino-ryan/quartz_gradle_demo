@@ -2,7 +2,9 @@ package com.quartz_gradle.job.config;
 
 import org.quartz.SchedulerContext;
 import org.quartz.SchedulerFactory;
+import org.quartz.impl.DirectSchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
@@ -40,17 +42,7 @@ public class MMSSchedulerConfig {
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
         schedulerFactoryBean.setConfigLocation(new ClassPathResource("quartz-no-cluster.properties"));
         schedulerFactoryBean.setDataSource(quartzDataSource);
-        //schedulerFactoryBean.setSchedulerFactory();
         return schedulerFactoryBean;
     }
-
-    @Bean
-    public SpringBeanJobFactory springBeanJobFactory(ApplicationContext applicationContext) {
-        AutoWiringSpringBeanJobFactory jobFactory = new AutoWiringSpringBeanJobFactory();
-        jobFactory.setSchedulerContext(new SchedulerContext());
-        jobFactory.setApplicationContext(applicationContext);
-        return jobFactory;
-    }
-
 
 }

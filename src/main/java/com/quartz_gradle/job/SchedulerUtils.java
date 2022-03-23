@@ -7,7 +7,7 @@ import java.util.Date;
 public final class SchedulerUtils {
     private SchedulerUtils() { }
 
-    public static JobDetail buildJobDetail(final Class jobClass, final TimerInfo info){
+    public static JobDetail buildJobDetail(final Class<? extends Job> jobClass, final TimerInfo info){
         final JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put(jobClass.getSimpleName(),info);
 
@@ -18,15 +18,20 @@ public final class SchedulerUtils {
                 .build();
     }
 
-    public static Trigger buildTrigger(final Class jobClass, final TimerInfo info){
+    public static Trigger buildTrigger(final Class<? extends Job> jobClass, final TimerInfo info){
         SimpleScheduleBuilder simpleScheduleBuilder =
                 SimpleScheduleBuilder.simpleSchedule().withIntervalInMilliseconds(info.getRepeatIntervalMs());
 
-        if(info.isRunForever()){
-            simpleScheduleBuilder = simpleScheduleBuilder.repeatForever();
+        if(info.isCronSchedule()){
+
         }else{
-            simpleScheduleBuilder = simpleScheduleBuilder.withRepeatCount(info.getTotalFireCount() - 1);
+            if(info.isRunForever()){
+                simpleScheduleBuilder = simpleScheduleBuilder.repeatForever();
+            }else{
+                simpleScheduleBuilder = simpleScheduleBuilder.withRepeatCount(info.getTotalFireCount() - 1);
+            }
         }
+
 
         return TriggerBuilder.newTrigger()
                 .withIdentity(jobClass.getSimpleName())

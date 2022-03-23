@@ -23,13 +23,13 @@ public class MMSSchedulerController {
         log.info("MMSSchedulerController is loaded");
     }
 
-    @PostMapping("/helloJob/{id}")
-    public void fireTrigger(@PathVariable String id){
-        moduleService.runHelloJob();
-    }
-
     @GetMapping("/helloJob")
     public void fireTrigger(){
         moduleService.runHelloJob();
+    }
+
+    @GetMapping("/helloJob/cluster")
+    public void fireTriggerClustered(){
+        moduleService.runHelloJobOnCluster();
     }
 }
