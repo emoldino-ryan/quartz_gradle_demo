@@ -7,8 +7,6 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * @author homo.efficio@gmail.com
- * created on 2018-08-12
  */
 @Slf4j
 public class  HelloJob implements Job {
