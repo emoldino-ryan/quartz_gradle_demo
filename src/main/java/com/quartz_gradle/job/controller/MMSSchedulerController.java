@@ -1,13 +1,12 @@
-package com.quartz_gradle.job;
+package com.quartz_gradle.job.controller;
 
+import com.quartz_gradle.job.model.TimerInfo;
 import com.quartz_gradle.job.service.MMSSchedulerService;
+import com.quartz_gradle.job.service.SchedulerIn;
 import com.quartz_gradle.mock_module.SomeModuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -23,9 +22,10 @@ public class MMSSchedulerController {
         log.info("MMSSchedulerController is loaded");
     }
 
-    @GetMapping("/helloJob")
-    public void fireTrigger(){
-        moduleService.runHelloJob();
+    @PostMapping("/job/run")
+    public void fireTrigger(@RequestBody TimerInfo info){
+        //info.getInitialOffsetMs();
+        moduleService.runJob(info);
     }
 
     @GetMapping("/helloJob/cluster")

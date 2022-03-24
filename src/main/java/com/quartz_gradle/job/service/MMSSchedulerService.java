@@ -1,12 +1,11 @@
 package com.quartz_gradle.job.service;
 
 import com.quartz_gradle.job.SchedulerUtils;
+import com.quartz_gradle.job.impl.ClusterServiceJob;
+import com.quartz_gradle.job.impl.NonClusterServiceJob;
 import com.quartz_gradle.job.model.TimerInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
+import org.quartz.*;
 import org.quartz.core.jmx.CronTriggerSupport;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,27 +33,35 @@ public class MMSSchedulerService {
         this.schedulerFactoryBean = schedulerFactoryBean;
     }
 
-//    private final Scheduler scheduler;
-//
-//    @Autowired
-//    public MMSSchedulerService(Scheduler scheduler) {
-//        this.scheduler = scheduler;
-//    }
-
-    public void schedule(final Class clazz, final TimerInfo info){
+    public void schedule(final TimerInfo info){
+        log.info("schedule start");
+        Class<? extends Job> clazz = info.isCluster() ? ClusterServiceJob.class : NonClusterServiceJob.class;
 
         final JobDetail jobDetail = SchedulerUtils.buildJobDetail(clazz,info);
         final Trigger trigger = SchedulerUtils.buildTrigger(clazz,info);
-        //final Trigger trigger = CronTriggerSupport.
 
         try{
-            log.info("clusteredSchedulerFactoryBean eq schedulerFactoryBean is {}",clusteredSchedulerFactoryBean.equals(schedulerFactoryBean));
-            Scheduler scheduler = info.isClustered() ? clusteredSchedulerFactoryBean.getScheduler() : schedulerFactoryBean.getScheduler();
+            Scheduler scheduler = clusteredSchedulerFactoryBean.getScheduler();
             scheduler.scheduleJob(jobDetail,trigger);
         }catch (SchedulerException e){
             log.error(e.getMessage(),e);
         }
     }
+
+//
+//    public void schedule2(final Class<? extends Job> clazz, final TimerInfo info){
+//
+//        final JobDetail jobDetail = SchedulerUtils.buildJobDetail(clazz,info);
+//        final Trigger trigger = SchedulerUtils.buildTrigger(clazz,info);
+//
+//        try{
+//            Scheduler scheduler = info.isCluster() ? clusteredSchedulerFactoryBean.getScheduler() : schedulerFactoryBean.getScheduler();
+//            scheduler.scheduleJob(jobDetail,trigger);
+//        }catch (SchedulerException e){
+//            log.error(e.getMessage(),e);
+//        }
+//    }
+
 
     public List<TimerInfo> getAllRunningTimer(){
         try {

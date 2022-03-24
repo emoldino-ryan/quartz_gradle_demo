@@ -34,6 +34,7 @@ public class MMSSchedulerConfig {
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
         schedulerFactoryBean.setConfigLocation(new ClassPathResource("quartz.properties"));
         schedulerFactoryBean.setDataSource(quartzDataSource);
+        schedulerFactoryBean.setApplicationContextSchedulerContextKey("applicationContext");
         return schedulerFactoryBean;
     }
 
@@ -42,6 +43,7 @@ public class MMSSchedulerConfig {
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
         schedulerFactoryBean.setConfigLocation(new ClassPathResource("quartz-no-cluster.properties"));
         schedulerFactoryBean.setDataSource(quartzDataSource);
+        schedulerFactoryBean.setApplicationContextSchedulerContextKey("applicationContext");
         return schedulerFactoryBean;
     }
 

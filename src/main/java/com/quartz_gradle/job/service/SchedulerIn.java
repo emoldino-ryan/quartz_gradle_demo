@@ -1,14 +1,9 @@
-package com.quartz_gradle.job.model;
+package com.quartz_gradle.job.service;
 
-import lombok.Builder;
 import lombok.Data;
 
-import java.io.Serializable;
-
-@Builder
 @Data
-public class TimerInfo implements Serializable {
-
+public class SchedulerIn {
     private long initialOffsetMs;
     private boolean cluster;
     private String cronExpress;
@@ -18,5 +13,4 @@ public class TimerInfo implements Serializable {
 
     private String groupName;
     private String jobIdentity;
-
 }
