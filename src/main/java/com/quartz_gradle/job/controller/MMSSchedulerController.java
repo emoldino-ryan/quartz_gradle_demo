@@ -28,8 +28,21 @@ public class MMSSchedulerController {
         service.schedule(info);
     }
 
+    @PostMapping("/job/{id}")
+    public void updateTrigger(@PathVariable String id, @RequestBody TimerInfo info){
+        //info.getInitialOffsetMs();
+        service.updateTimer(id,info);
+    }
+
+
+
     @GetMapping("/job")
     public List<TimerInfo> getTimger(){
         return service.getAllRunningTimer();
+    }
+
+    @GetMapping("/job/{id}")
+    public TimerInfo getTimger(@PathVariable String id){
+        return service.getRunningTimer(id);
     }
 }

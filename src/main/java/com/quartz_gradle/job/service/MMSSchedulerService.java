@@ -89,6 +89,33 @@ public class MMSSchedulerService {
                 .collect(Collectors.toList());
     }
 
+    public TimerInfo getRunningTimer(String id){
+        try{
+            final JobDetail jobDetail = clusteredSchedulerFactoryBean.getScheduler().getJobDetail(new JobKey(id));
+            if(jobDetail == null){
+                log.error("Cannot Find jobDetail with id {}",id);
+                return null;
+            }
+            return (TimerInfo) jobDetail.getJobDataMap().get(id);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void updateTimer(String id, TimerInfo info) {
+        try{
+            final JobDetail jobDetail = clusteredSchedulerFactoryBean.getScheduler().getJobDetail(new JobKey(id));
+            if(jobDetail == null){
+                log.error("Cannot Find jobDetail with id {}",id);
+                return;
+            }
+            jobDetail.getJobDataMap().put(id,info);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+    }
+
     @PostConstruct
     public void init(){
         log.info("Init MMSSchedulerService and Scheduler is started.");
