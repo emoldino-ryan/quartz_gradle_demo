@@ -8,28 +8,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 public class MMSSchedulerController {
 
     private final MMSSchedulerService service;
-    private final SomeModuleService moduleService;
 
     @Autowired
-    public MMSSchedulerController(final MMSSchedulerService service, final SomeModuleService moduleService) {
+    public MMSSchedulerController(final MMSSchedulerService service) {
         this.service = service;
-        this.moduleService = moduleService;
         log.info("MMSSchedulerController is loaded");
     }
 
     @PostMapping("/job/run")
     public void fireTrigger(@RequestBody TimerInfo info){
         //info.getInitialOffsetMs();
-        moduleService.runJob(info);
+        service.schedule(info);
     }
 
-    @GetMapping("/helloJob/cluster")
-    public void fireTriggerClustered(){
-        moduleService.runHelloJobOnCluster();
+    @GetMapping("/job")
+    public List<TimerInfo> getTimger(){
+        return service.getAllRunningTimer();
     }
 }

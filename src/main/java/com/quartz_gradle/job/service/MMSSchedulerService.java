@@ -43,7 +43,7 @@ public class MMSSchedulerService {
         try{
             Scheduler scheduler = clusteredSchedulerFactoryBean.getScheduler();
             scheduler.scheduleJob(jobDetail,trigger);
-        }catch (SchedulerException e){
+        } catch (SchedulerException e){
             log.error(e.getMessage(),e);
         }
     }
@@ -66,7 +66,7 @@ public class MMSSchedulerService {
     public List<TimerInfo> getAllRunningTimer(){
         try {
             List<TimerInfo> collect = getAllRunningTimer(clusteredSchedulerFactoryBean.getScheduler());
-            collect.addAll(getAllRunningTimer(schedulerFactoryBean.getScheduler()));
+            // collect.addAll(getAllRunningTimer(schedulerFactoryBean.getScheduler()));
             return collect;
         } catch (SchedulerException e) {
             e.printStackTrace();
