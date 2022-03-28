@@ -9,7 +9,7 @@ public final class SchedulerUtils {
 
     public static JobDetail buildJobDetail(final Class<? extends Job> jobClass, final TimerInfo info){
         final JobDataMap jobDataMap = new JobDataMap();
-        jobDataMap.put(jobClass.getSimpleName(),info);
+        jobDataMap.put(info.getGroupName()+"."+info.getJobIdentity(),info);
         jobDataMap.put("service",info.getServiceName());
         jobDataMap.put("method",info.getMethod());
 

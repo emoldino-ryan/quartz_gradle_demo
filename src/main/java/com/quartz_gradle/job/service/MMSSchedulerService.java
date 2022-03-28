@@ -33,40 +33,41 @@ public class MMSSchedulerService {
         this.schedulerFactoryBean = schedulerFactoryBean;
     }
 
-    public void schedule(final TimerInfo info){
-        log.info("schedule start");
-        Class<? extends Job> clazz = info.isCluster() ? ClusterServiceJob.class : NonClusterServiceJob.class;
-
-        final JobDetail jobDetail = SchedulerUtils.buildJobDetail(clazz,info);
-        final Trigger trigger = SchedulerUtils.buildTrigger(clazz,info);
-
-        try{
-            Scheduler scheduler = clusteredSchedulerFactoryBean.getScheduler();
-            scheduler.scheduleJob(jobDetail,trigger);
-        } catch (SchedulerException e){
-            log.error(e.getMessage(),e);
-        }
-    }
-
-//
-//    public void schedule2(final Class<? extends Job> clazz, final TimerInfo info){
+//    public void schedule(final TimerInfo info){
+//        log.info("schedule start");
+//        Class<? extends Job> clazz = info.isCluster() ? ClusterServiceJob.class : NonClusterServiceJob.class;
 //
 //        final JobDetail jobDetail = SchedulerUtils.buildJobDetail(clazz,info);
 //        final Trigger trigger = SchedulerUtils.buildTrigger(clazz,info);
 //
 //        try{
-//            Scheduler scheduler = info.isCluster() ? clusteredSchedulerFactoryBean.getScheduler() : schedulerFactoryBean.getScheduler();
+//            Scheduler scheduler = clusteredSchedulerFactoryBean.getScheduler();
 //            scheduler.scheduleJob(jobDetail,trigger);
-//        }catch (SchedulerException e){
+//        } catch (SchedulerException e){
 //            log.error(e.getMessage(),e);
 //        }
 //    }
 
 
+    public void schedule(final TimerInfo info){
+
+        final Class<? extends Job> clazz = ClusterServiceJob.class;
+        final JobDetail jobDetail = SchedulerUtils.buildJobDetail(clazz,info);
+        final Trigger trigger = SchedulerUtils.buildTrigger(clazz,info);
+
+        try{
+            Scheduler scheduler = info.isCluster() ? clusteredSchedulerFactoryBean.getScheduler() : schedulerFactoryBean.getScheduler();
+            scheduler.scheduleJob(jobDetail,trigger);
+        }catch (SchedulerException e){
+            log.error(e.getMessage(),e);
+        }
+    }
+
+
     public List<TimerInfo> getAllRunningTimer(){
         try {
             List<TimerInfo> collect = getAllRunningTimer(clusteredSchedulerFactoryBean.getScheduler());
-            // collect.addAll(getAllRunningTimer(schedulerFactoryBean.getScheduler()));
+            System.out.println(collect);
             return collect;
         } catch (SchedulerException e) {
             e.printStackTrace();
@@ -79,8 +80,15 @@ public class MMSSchedulerService {
         return scheduler.getJobKeys(GroupMatcher.anyGroup()).stream()
                 .map(jobKey -> {
                     try {
+                        log.info(jobKey.getGroup());
+                        log.info(jobKey.getName());
                         final JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-                        return (TimerInfo) jobDetail.getJobDataMap().get(jobKey.getName());
+                        System.out.println(jobDetail);
+                        for( String dd :jobDetail.getJobDataMap().getKeys()){
+                            System.out.println(dd);
+                        }
+
+                        return (TimerInfo) jobDetail.getJobDataMap().get("Clustered.Test1");
                     } catch (SchedulerException e) {
                         e.printStackTrace();
                         return null;
@@ -111,8 +119,19 @@ public class MMSSchedulerService {
                 return;
             }
             jobDetail.getJobDataMap().put(id,info);
+
+            clusteredSchedulerFactoryBean.getScheduler().addJob(jobDetail,true,true);
         } catch (SchedulerException e) {
             e.printStackTrace();
+        }
+    }
+
+    public Boolean deleteTimer(final String id){
+        try {
+            return clusteredSchedulerFactoryBean.getScheduler().deleteJob(new JobKey(id));
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

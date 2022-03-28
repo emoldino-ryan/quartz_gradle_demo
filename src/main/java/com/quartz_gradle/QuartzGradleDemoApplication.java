@@ -3,7 +3,8 @@ package com.quartz_gradle;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+
+@SpringBootApplication(scanBasePackages = {"com.quartz_gradle","com.emoldino.framework.util"})
 public class QuartzGradleDemoApplication {
 
     public static void main(String[] args) {

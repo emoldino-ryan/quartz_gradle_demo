@@ -37,12 +37,12 @@ public class MMSSchedulerController {
 
 
     @GetMapping("/job")
-    public List<TimerInfo> getTimger(){
+    public List<TimerInfo> getAllTimer(){
         return service.getAllRunningTimer();
     }
 
     @GetMapping("/job/{id}")
-    public TimerInfo getTimger(@PathVariable String id){
+    public TimerInfo getTimer(@PathVariable String id){
         return service.getRunningTimer(id);
     }
 }

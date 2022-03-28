@@ -8,12 +8,14 @@ import org.quartz.JobExecutionContext;
 import org.quartz.SchedulerException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
 @Slf4j
+
 public class ClusterServiceJob extends BaseJob {
 
     //ApplicationContext applicationContext = (ApplicationContext) context.getScheduler().getContext().get("applicationContext");
@@ -21,44 +23,29 @@ public class ClusterServiceJob extends BaseJob {
     @Override
     protected void doExecute(JobExecutionContext context) throws SchedulerException {
 
-        ApplicationContext applicationContext = (ApplicationContext) context.getScheduler().getContext().get("applicationContext");
+        //ApplicationContext applicationContext = (ApplicationContext) context.getScheduler().getContext().get("applicationContext");
 
-//        String serviceName = context.getJobDetail().getJobDataMap().getString("service");
-//        String method = context.getJobDetail().getJobDataMap().getString("method");
-//
-//        try {
-////            Class<?> targetClass = Class.forName(serviceName);
-////            Object target = BeanUtils.get(targetClass);
-////
-////            Method[] declaredMethods = ReflectionUtils.getDeclaredMethods(targetClass);
-////            for(Method m : declaredMethods){
-////                if(m.getName().equals(method)){
-////                    ReflectionUtils.invokeMethod(m,target);
-////                    return;
-////                }
-////            }
-//
-//            log.info("serviceName is {}",serviceName);
-//            log.info("method is {}",method);
-//            Object target = BeanUtils.get(serviceName);
-//
-//            Method[] declaredMethods = ReflectionUtils.getDeclaredMethods(target.getClass());
-//            for(Method m : declaredMethods){
-//                if(m.getName().equals(method)){
-//                    ReflectionUtils.invokeMethod(m,target);
-//                    return;
-//                }
-//            }
-//
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        String serviceName = context.getJobDetail().getJobDataMap().getString("service");
+        String method = context.getJobDetail().getJobDataMap().getString("method");
 
-        applicationContext.getBean(HelloService.class).hello();
-        //BeanUtils.get(HelloService.class).hello();
+        try {
+            Class<?> targetClass = Class.forName(serviceName);
+            Object target = BeanUtils.get(targetClass);
 
+            Method[] declaredMethods = ReflectionUtils.getDeclaredMethods(targetClass);
+            for(Method m : declaredMethods){
+                if(m.getName().equals(method)){
+                    m.invoke(target,new Object[0]);
+                    //ReflectionUtils.invokeMethod(m,target);
+                    return;
+                }
+            }
 
+            log.info("serviceName is {}",serviceName);
+            log.info("method is {}",method);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
