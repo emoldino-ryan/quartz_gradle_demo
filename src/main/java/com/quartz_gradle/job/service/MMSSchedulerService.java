@@ -87,8 +87,7 @@ public class MMSSchedulerService {
                         for( String dd :jobDetail.getJobDataMap().getKeys()){
                             System.out.println(dd);
                         }
-
-                        return (TimerInfo) jobDetail.getJobDataMap().get("Clustered.Test1");
+                        return (TimerInfo) jobDetail.getJobDataMap().get(jobKey.getGroup()+"."+jobKey.getName());
                     } catch (SchedulerException e) {
                         e.printStackTrace();
                         return null;

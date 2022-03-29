@@ -2,13 +2,9 @@ package com.quartz_gradle.job.impl;
 
 import com.emoldino.framework.util.BeanUtils;
 import com.quartz_gradle.job.BaseJob;
-import com.quartz_gradle.mock_module.HelloService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.SchedulerException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
