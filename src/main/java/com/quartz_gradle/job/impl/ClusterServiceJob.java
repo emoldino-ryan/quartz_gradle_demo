@@ -12,18 +12,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 @Slf4j
-
 public class ClusterServiceJob extends BaseJob {
-
-    //ApplicationContext applicationContext = (ApplicationContext) context.getScheduler().getContext().get("applicationContext");
 
     @Override
     protected void doExecute(JobExecutionContext context) throws SchedulerException {
-
-        //ApplicationContext applicationContext = (ApplicationContext) context.getScheduler().getContext().get("applicationContext");
 
         String serviceName = context.getJobDetail().getJobDataMap().getString("service");
         String method = context.getJobDetail().getJobDataMap().getString("method");
@@ -36,7 +30,6 @@ public class ClusterServiceJob extends BaseJob {
             for(Method m : declaredMethods){
                 if(m.getName().equals(method)){
                     m.invoke(target,new Object[0]);
-                    //ReflectionUtils.invokeMethod(m,target);
                     return;
                 }
             }

@@ -24,6 +24,8 @@ public abstract class BaseJob implements Job {
         }
     }
 
+    protected abstract void doExecute(JobExecutionContext context) throws SchedulerException;
+
     private void throwExecute(JobExecutionContext context) {
         log.info("%%% Throw executing job %%%");
     }
@@ -31,8 +33,6 @@ public abstract class BaseJob implements Job {
     private void beforeExecute(JobExecutionContext context) {
         log.info("%%% Before executing job %%%");
     }
-
-    protected abstract void doExecute(JobExecutionContext context) throws SchedulerException;
 
     private void afterExecute(JobExecutionContext context) {
         log.info("%%% After executing job %%%");
