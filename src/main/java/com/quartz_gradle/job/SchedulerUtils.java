@@ -9,13 +9,12 @@ public final class SchedulerUtils {
 
     public static JobDetail buildJobDetail(final Class<? extends Job> jobClass, final TimerInfo info){
         final JobDataMap jobDataMap = new JobDataMap();
-        jobDataMap.put(info.getGroupName()+"."+info.getJobIdentity(),info);
+        jobDataMap.put(info.getGroupName()+"."+ info.getJobIdentity(),info);
         jobDataMap.put("service",info.getServiceName());
         jobDataMap.put("method",info.getMethod());
 
         return JobBuilder
                 .newJob(jobClass)
-                //.withIdentity(jobClass.getSimpleName())
                 .withIdentity(info.getJobIdentity(),info.getGroupName())
                 .setJobData(jobDataMap)
                 .build();
@@ -24,7 +23,6 @@ public final class SchedulerUtils {
     public static Trigger buildTrigger(final Class<? extends Job> jobClass, final TimerInfo info){
 
         return TriggerBuilder.newTrigger()
-                //.withIdentity(jobClass.getSimpleName())
                 .withIdentity(info.getJobIdentity(),info.getGroupName())
                 .withSchedule(CronScheduleBuilder.cronSchedule(info.getCronExpress()))
                 .startAt(new Date(System.currentTimeMillis() + info.getInitialOffsetMs()))

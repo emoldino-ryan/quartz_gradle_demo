@@ -2,11 +2,10 @@ package com.quartz_gradle.job.service;
 
 import com.quartz_gradle.job.SchedulerUtils;
 import com.quartz_gradle.job.impl.ClusterServiceJob;
-import com.quartz_gradle.job.impl.NonClusterServiceJob;
 import com.quartz_gradle.job.model.TimerInfo;
+import com.quartz_gradle.job.repo.SchedulerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
-import org.quartz.core.jmx.CronTriggerSupport;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,12 +24,15 @@ public class MMSSchedulerService {
 
     private final SchedulerFactoryBean clusteredSchedulerFactoryBean;
     private final SchedulerFactoryBean schedulerFactoryBean;
+    private final SchedulerRepository schedulerRepository;
 
     @Autowired
     public MMSSchedulerService(@Qualifier("clusteredSchedulerFactoryBean") SchedulerFactoryBean clusteredSchedulerFactoryBean,
-                               @Qualifier("schedulerFactoryBean") SchedulerFactoryBean schedulerFactoryBean) {
+                               @Qualifier("schedulerFactoryBean") SchedulerFactoryBean schedulerFactoryBean,
+                               SchedulerRepository schedulerRepository) {
         this.clusteredSchedulerFactoryBean = clusteredSchedulerFactoryBean;
         this.schedulerFactoryBean = schedulerFactoryBean;
+        this.schedulerRepository = schedulerRepository;
     }
 
     public void schedule(final TimerInfo info){
@@ -77,7 +79,10 @@ public class MMSSchedulerService {
 
     public TimerInfo getRunningTimer(String id){
         try{
-            final JobDetail jobDetail = clusteredSchedulerFactoryBean.getScheduler().getJobDetail(new JobKey(id));
+            String[] ids = id.split("\\.");
+            String group = ids[0];
+            String name = ids[1];
+            final JobDetail jobDetail = clusteredSchedulerFactoryBean.getScheduler().getJobDetail(new JobKey(name,group));
             if(jobDetail == null){
                 log.error("Cannot Find jobDetail with id {}",id);
                 return null;
@@ -91,7 +96,10 @@ public class MMSSchedulerService {
 
     public void updateTimer(String id, TimerInfo info) {
         try{
-            final JobDetail jobDetail = clusteredSchedulerFactoryBean.getScheduler().getJobDetail(new JobKey(id));
+            String[] ids = id.split("\\.");
+            String group = ids[0];
+            String name = ids[1];
+            final JobDetail jobDetail = clusteredSchedulerFactoryBean.getScheduler().getJobDetail(new JobKey(name,group));
             if(jobDetail == null){
                 log.error("Cannot Find jobDetail with id {}",id);
                 return;
@@ -106,7 +114,13 @@ public class MMSSchedulerService {
 
     public Boolean deleteTimer(final String id){
         try {
-            return clusteredSchedulerFactoryBean.getScheduler().deleteJob(new JobKey(id));
+            String[] ids = id.split("\\.");
+            String group = ids[0];
+            String name = ids[1];
+
+            clusteredSchedulerFactoryBean.getScheduler().unscheduleJob(new TriggerKey(name,group));
+            clusteredSchedulerFactoryBean.getScheduler().deleteJob(new JobKey(name,group));
+            return true;
         } catch (SchedulerException e) {
             e.printStackTrace();
             return false;
