@@ -33,22 +33,6 @@ public class MMSSchedulerService {
         this.schedulerFactoryBean = schedulerFactoryBean;
     }
 
-//    public void schedule(final TimerInfo info){
-//        log.info("schedule start");
-//        Class<? extends Job> clazz = info.isCluster() ? ClusterServiceJob.class : NonClusterServiceJob.class;
-//
-//        final JobDetail jobDetail = SchedulerUtils.buildJobDetail(clazz,info);
-//        final Trigger trigger = SchedulerUtils.buildTrigger(clazz,info);
-//
-//        try{
-//            Scheduler scheduler = clusteredSchedulerFactoryBean.getScheduler();
-//            scheduler.scheduleJob(jobDetail,trigger);
-//        } catch (SchedulerException e){
-//            log.error(e.getMessage(),e);
-//        }
-//    }
-
-
     public void schedule(final TimerInfo info){
 
         final Class<? extends Job> clazz = ClusterServiceJob.class;
@@ -67,7 +51,6 @@ public class MMSSchedulerService {
     public List<TimerInfo> getAllRunningTimer(){
         try {
             List<TimerInfo> collect = getAllRunningTimer(clusteredSchedulerFactoryBean.getScheduler());
-            System.out.println(collect);
             return collect;
         } catch (SchedulerException e) {
             e.printStackTrace();
@@ -83,10 +66,6 @@ public class MMSSchedulerService {
                         log.info(jobKey.getGroup());
                         log.info(jobKey.getName());
                         final JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-                        System.out.println(jobDetail);
-                        for( String dd :jobDetail.getJobDataMap().getKeys()){
-                            System.out.println(dd);
-                        }
                         return (TimerInfo) jobDetail.getJobDataMap().get(jobKey.getGroup()+"."+jobKey.getName());
                     } catch (SchedulerException e) {
                         e.printStackTrace();
