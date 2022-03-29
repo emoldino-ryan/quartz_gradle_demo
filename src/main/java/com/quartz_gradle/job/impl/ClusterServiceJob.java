@@ -25,13 +25,14 @@ public class ClusterServiceJob extends BaseJob {
             Method[] declaredMethods = ReflectionUtils.getDeclaredMethods(targetClass);
             for(Method m : declaredMethods){
                 if(m.getName().equals(method)){
+
+                    log.info("serviceName is {}",serviceName);
+                    log.info("method is {}",method);
+
                     m.invoke(target,new Object[0]);
                     return;
                 }
             }
-
-            log.info("serviceName is {}",serviceName);
-            log.info("method is {}",method);
 
         } catch (Exception e) {
             e.printStackTrace();
