@@ -6,8 +6,6 @@ import com.quartz_gradle.job.service.MMSSchedulerService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,25 +100,25 @@ public class JobTest {
 
     @Test
     public void 리플렉션테스트(){
-        String serviceName = "com.quartz_gradle.mock_module.HelloSerivceTest";
-        String method = "hello";
-
-        try {
-            Class<?> targetClass = Class.forName(serviceName);
-            Object target = BeanUtils.get(targetClass);
-
-            Method[] declaredMethods = ReflectionUtils.getDeclaredMethods(targetClass);
-            for(Method m : declaredMethods){
-                if(m.getName().equals(method)){
-                    ReflectionUtils.invokeMethod(m,target);
-                    return;
-                }
-            }
-
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+//        String serviceName = "com.quartz_gradle.mock_module.HelloSerivceTest";
+//        String method = "hello";
+//
+//        try {
+//            Class<?> targetClass = Class.forName(serviceName);
+//            Object target = BeanUtils.get(targetClass);
+//
+//            Method[] declaredMethods = ReflectionUtils.getDeclaredMethods(targetClass);
+//            for(Method m : declaredMethods){
+//                if(m.getName().equals(method)){
+//                    ReflectionUtils.invokeMethod(m,target);
+//                    return;
+//                }
+//            }
+//
+//
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

@@ -2,8 +2,6 @@ package com.quartz_gradle.job.controller;
 
 import com.quartz_gradle.job.model.TimerInfo;
 import com.quartz_gradle.job.service.MMSSchedulerService;
-import com.quartz_gradle.job.service.SchedulerIn;
-import com.quartz_gradle.mock_module.SomeModuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
